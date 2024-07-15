@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Task 2 - messages ui</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="flex items-center">
+    <div class="container p-6 border border-solid">
+      <!-- search form -->
+
+      <form class="flex gap-x-4">
+        <input
+          type="search"
+          class="flex-auto w-0 min-w-0 border border-gray-200 rounded-md p-2 text-sm"
+          placeholder="Search"
+        />
+        <button
+          type="submit"
+          class="flex-none px-4 py-2 bg-blue-500 text-white rounded-md text-sm"
+        >
+          Search
+        </button>
+      </form>
+
+      <ul role="list" class="divide-y divide-gray-100"></ul>
+    </div>
+    <template id="list-item">
+      <li class="flex justify-between gap-x-6 py-5">
+        <div class="flex min-w-0 gap-x-4">
+          <div class="min-w-0 flex-auto">
+            <p class="subject text-sm font-semibold leading-6 text-gray-900">
+              Leslie Alexander
+            </p>
+            <p class="author mt-1 truncate text-xs leading-5 text-gray-500">
+              leslie.alexander@example.com
+            </p>
+          </div>
+        </div>
+        <div class="hidden shrink-0 sm:flex sm:flex-col sm:items-end">
+          <p class="text-sm leading-6 text-gray-900">Co-Founder / CEO</p>
+          <p class="mt-1 text-xs leading-5 text-gray-500">
+            Last seen <time datetime="2023-01-23T13:23Z">3h ago</time>
+          </p>
+        </div>
+      </li>
+    </template>
+  </body>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      fetch("https://italent2.demo.lithium.com/api/2.0/search", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify([
+          {
+            messages: {
+              fields: ["author", "subject"],
+
+              constraints: [
+                { depth: 0 },
+                {
+                  "conversation.solved": false,
+                },
+              ],
+            },
+          },
+          {
+            categories: {
+              fields: ["title"],
+            },
+          },
+        ]),
+      })
+        .then((r) => r.json())
+        .then((data) => {
+          const [allMesages, categories] = data.data;
+          console.log("all cat", categories);
+
+          const listItem = document.getElementById("list-item");
+          const list = document.querySelector("ul");
+          allMesages.items.forEach((message) => {
+            const clone = listItem.content.cloneNode(true);
+            const subject = clone.querySelector(".subject");
+            const author = clone.querySelector(".author");
+            const lastSeen = clone.querySelector("time");
+            const role = clone.querySelector(".text-sm");
+            const time = clone.querySelector(".text-xs");
+            subject.textContent = message.subject;
+            author.textContent = message.author.login;
+            // lastSeen.textContent = message.lastSeen;
+            // role.textContent = message.role;
+            // time.textContent = message.time;
+            list.appendChild(clone);
+          });
+
+          //   console.log("data >>>>", data.data.items);
+        });
+    });
+  </script>
+</html>
