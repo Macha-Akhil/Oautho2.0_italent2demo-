@@ -11,6 +11,7 @@ def hello():
 @app.route('/')
 def home():
     link = {'name': 'italent2', 'url': 'https://italent2.demo.lithium.com/auth/oauth2/authorize?client_id=4bt84GFIquIqQojRIMwpoz2eu9sqB2Q8DRiVcFKo87g=&response_type=code&redirect_uri=http://127.0.0.1:5001/callback'}
+    #   link = {'name': 'italent2', 'url': 'https://italent2.demo.lithium.com/auth/oauth2/authorize?client_id=4bt84GFIquIqQojRIMwpoz2eu9sqB2Q8DRiVcFKo87g=&response_type=code&redirect_uri=http://127.0.0.1:5001/callback'}
     return render_template('index.html',link=link)
 
 @app.route('/callback',methods=['GET'])
@@ -32,6 +33,7 @@ def callback():
         'client_secret': 'ZTspnQDqSPJJ8XLZCaJgwMr5MVTOicvQm3OJ0eUx6oc=',
         'grant_type': 'authorization_code',
         'redirect_uri': 'http://127.0.0.1:5001/callback',
+        #  'redirect_uri': 'http://127.0.0.1:5001/callback',
         'code': session_code  # Assuming you pass the code in the request body JSON
     }
     #return data
